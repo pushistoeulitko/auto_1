@@ -1,0 +1,6 @@
+/main.py
+/venv/
+/.idea/
+/.pytest_cache/
+/.reports/
+#.gitignore
