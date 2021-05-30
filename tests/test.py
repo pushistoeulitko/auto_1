@@ -1,11 +1,10 @@
 import allure
-from selene.support.jquery_style_selectors import s
-from Elements import Elements
-from User import User
+from selene.config import base_url
+from selene.support.shared.jquery_style import s
+from src.Elements import Elements
+from src.User import User
 import pytest
 
-
-url="https://delo-prod.skblab.ru/login"
 
 class Work(object):
 
@@ -27,7 +26,7 @@ wrong3 = User("testuser24", "1234", "2222")
 @allure.story('Ввод верного логина и пароля')
 @allure.title('Нормальное название теста')
 @allure.issue('http://testlink.org', name='здесь мог бы быть номер тест-кейса')
-@allure.link(url, name=f'Тестируем сайт {url}')
+@allure.link(base_url, name=f'Тестируем сайт {base_url}')
 @allure.description('Тестируем вход с верным логином и смс')
 def test_log():
     Elements().open().input_login(right).input_password(right).press_button().check_title('Делобанк - Подтверждение входа')
@@ -60,6 +59,7 @@ def test_log2(user):
 def test_log3():
     Elements().open().input_login(wrong3).input_password(wrong3).press_button().insert_sms(wrong3)
     Elements().check_error('Введен неправильный одноразовый код')
+   # selene.browser.take_screenshot()
 
 
 @allure.suite('Регресс')
