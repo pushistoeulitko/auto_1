@@ -31,6 +31,9 @@ def step_quit(quit):
 
 @pytest.fixture(scope='module')
 def teardown_module():
+    def generate_report():
+        call(["../reports/allure", "generate", "report"], cwd="../")
+    generate_report()
     browser.quit()
 
 

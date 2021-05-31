@@ -24,14 +24,13 @@ wrong3 = User("testuser24", "1234", "2222")
 @allure.epic('Регресс --> авторизации')
 @allure.feature('Вход в ДБО')
 @allure.story('Ввод верного логина и пароля')
-@allure.title('Нормальное название теста')
+@allure.title('Тест 1 - Положительный сценарий авторизации в ДБО (ввод правильного логина, пароля, смс)')
 @allure.issue('http://testlink.org', name='здесь мог бы быть номер тест-кейса')
-@allure.link(base_url, name=f'Тестируем сайт {base_url}')
 @allure.description('Тестируем вход с верным логином и смс')
 def test_log():
     Elements().open().input_login(right).input_password(right).press_button().check_title('Делобанк - Подтверждение входа')
     Elements().insert_sms(right).check_title('Делобанк')
-    Elements().logout_manual()
+    Elements().logout_manual2()
     #Elements().clear_cookie()
 
 
@@ -40,9 +39,9 @@ def test_log():
 @allure.feature('Вход в ДБО')
 @pytest.mark.parametrize("user", [wrong1, wrong2])
 @allure.story('Ввод неверного логина или пароля')
-@allure.title(f'Нормальное название теста 2')
+@allure.title(f'Тест 2 - Негативный сценарий авторизации в ДБО (ввод не верного правильного логина или пароля)')
 @allure.description('Тестируем вход с верным логином и смс')
-@allure.link(url, name=f'Тестируем сайт {url}')
+@allure.issue('http://testlink.org', name='здесь мог бы быть номер тест-кейса')
 
 def test_log2(user):
     Elements().open().input_login(user).input_password(user).press_button().check_error('Указан неверный логин или пароль')
@@ -52,24 +51,24 @@ def test_log2(user):
 @allure.epic('Регресс --> авторизации')
 @allure.feature('Вход в ДБО')
 @allure.story('Ввод неверной смс')
-@allure.title(f'Нормальное название теста 3')
+@allure.title(f'Тест 3 - Негативный сценарий авторизации в ДБО (ввод не верного смс)')
 @allure.description('Тестируем вход с неверной смс')
-@allure.link(url, name=f'Тестируем сайт {url}')
+@allure.issue('http://testlink.org', name='здесь мог бы быть номер тест-кейса')
 @allure.severity('trivial')
 def test_log3():
     Elements().open().input_login(wrong3).input_password(wrong3).press_button().insert_sms(wrong3)
     Elements().check_error('Введен неправильный одноразовый код')
-   # selene.browser.take_screenshot()
+
 
 
 @allure.suite('Регресс')
 @allure.epic('Регресс --> авторизации')
 @allure.feature('Вход в ДБО')
 @allure.story('Сломаный тест')
-@allure.title(f'Нормальное название теста 4')
+@allure.title(f'Тест 4 - Сломаный тест')
 @allure.severity('trivial')
 @allure.description('Тестируем вход Сломаный тест')
-@allure.link(url, name=f'Тестируем сайт {url}')
+@allure.issue('http://testlink.org', name='здесь мог бы быть номер тест-кейса')
 def test_log4():
     Elements().open().input_login(right).input_password(right).press_button().check_tite()
 
