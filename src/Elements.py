@@ -1,14 +1,11 @@
 import time
-from webbrowser import Chrome
 import requests
 import allure
 from selene import by, be, have, Browser, Config
 from selene.config import base_url
+from selene.core.query import screenshot
 from selene.support.shared.jquery_style import s, ss
 from selene.support.shared import browser, config
-
-config.base_url = "https://delo-prod.skblab.ru/login"
-
 
 # config.start_maximized = True
 # config.window_width = 1250
@@ -30,10 +27,16 @@ class Elements(object):
         self.quit = s(by.xpath("//span[contains(text(), 'Выйти')]"))
 
 
+    @allure.step(f'Открываем сайт')
+    # def step_with_title0(self, url):
+    #     pass
+
     def open(self):
+        # self.step_with_title0(self, str(base_url))
         try:
             browser.open(base_url)
         except IOError as e:
+            self.screenshot()
             print(e)
         return self
 
@@ -42,10 +45,11 @@ class Elements(object):
         pass
 
     def input_login(self, user):
-        self.step_with_title1(user.name, str(self.login))
+        self.step_with_title1(user.name, self.get_locator(self.login))
         try:
             self.login.set_value(user.name)
         except IOError as e:
+            self.screenshot()
             print(e)
         return self
 
@@ -54,11 +58,11 @@ class Elements(object):
         pass
 
     def input_password(self, user):
-        self.step_with_title2(str(self.password), user.passw)
+        self.step_with_title2(self.get_locator(self.password), user.passw)
         try:
             self.password.set_value(user.passw)
-            browser.take_screenshot()
         except IOError as e:
+            self.screenshot()
             print(e)
         return self
 
@@ -67,11 +71,11 @@ class Elements(object):
         pass
 
     def press_button(self):
-        self.step_with_title3(str(self.submit_buttons))
+        self.step_with_title3(self.get_locator(self.submit_buttons))
         try:
             self.submit_buttons.click()
-            browser.take_screenshot()
         except IOError as e:
+            self.screenshot()
             print(e)
         return self
 
@@ -83,8 +87,8 @@ class Elements(object):
         self.step_with_title4(title_text)
         try:
             browser.should(have.title_containing(title_text))
-            browser.take_screenshot()
         except IOError as e:
+            self.screenshot()
             print(e)
         return self
 
@@ -93,13 +97,13 @@ class Elements(object):
         pass
 
     def insert_sms(self, user):
-        self.step_with_title5(str(self.input_sms_only), user.sms)
+        self.step_with_title5(self.get_locator(self.input_sms_only[0]), user.sms)
         try:
             sms_num = list(user.sms)
             for i in range(len(sms_num)):
                 self.input_sms_only[i].set_value(sms_num[i])
-                browser.take_screenshot()
         except IOError as e:
+            self.screenshot()
             print(e)
         return self
 
@@ -108,11 +112,11 @@ class Elements(object):
         pass
 
     def check_error(self, text_error):
-        self.step_with_title6(str(self.error), text_error)
+        self.step_with_title6(self.get_locator(self.error), text_error)
         try:
-            browser.take_screenshot()
             self.error.should(have.text(text_error), timeout=3), f"Не удалось зарегистрироваться {text_error}"
         except IOError as e:
+            self.screenshot()
             print(e)
 
     # разлогинивание
@@ -139,3 +143,14 @@ class Elements(object):
 
     # def at_page_main(self):
     #     return MainPage
+
+    #  преобразование элемента
+    def get_locator(self, selene_element):
+        locator = str(selene_element)[17:-3]
+        return locator
+
+    def screenshot(self):
+        #browser.take_screenshot(self, path='../src/screenshots')
+        allure.attach.file('./src/screenshots.png', attachment_type=allure.attachment_type.PNG)
+
+
