@@ -12,7 +12,6 @@ wrong3 = User("testuser24", "1234", "2222")
 class TestAuth(object):
     pass
 
-
     @allure.suite('Регресс')
     @allure.epic('Регресс --> авторизации')
     @allure.feature('Вход в ДБО')

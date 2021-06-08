@@ -10,7 +10,6 @@ def step_driver():
 
 @pytest.fixture(scope='module', autouse=True)
 def setup_module():
-    browser.config.start_maximized = True
     browser.config.base_url = "https://delo-prod.skblab.ru/login"
 
 
@@ -22,4 +21,7 @@ def step_quit(quit):
 @pytest.fixture(scope='module')
 def teardown_module():
     browser.quit()
+
+
+
 

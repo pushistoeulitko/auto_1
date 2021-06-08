@@ -1,14 +1,12 @@
 import time
 import requests
 import allure
+from allure_commons.types import AttachmentType
 from selene import by, be, have, Browser, Config
 from selene.config import base_url
 from selene.core.query import screenshot
 from selene.support.shared.jquery_style import s, ss
 from selene.support.shared import browser, config
-
-# config.start_maximized = True
-# config.window_width = 1250
 
 
 class Elements(object):
@@ -35,9 +33,10 @@ class Elements(object):
         # self.step_with_title0(self, str(base_url))
         try:
             browser.open(base_url)
+
         except IOError as e:
             self.screenshot()
-            print(e)
+            print('Что то пошло не так, мы уже работаем над этим', e)
         return self
 
     @allure.step(f'Вводим логин')
@@ -48,9 +47,10 @@ class Elements(object):
         self.step_with_title1(user.name, self.get_locator(self.login))
         try:
             self.login.set_value(user.name)
+
         except IOError as e:
             self.screenshot()
-            print(e)
+            print('Что то пошло не так, мы уже работаем над этим', e)
         return self
 
     @allure.step('Вводим пароль')
@@ -61,9 +61,10 @@ class Elements(object):
         self.step_with_title2(self.get_locator(self.password), user.passw)
         try:
             self.password.set_value(user.passw)
-        except IOError as e:
             self.screenshot()
-            print(e)
+        except IOError as e:
+
+            print('Что то пошло не так, мы уже работаем над этим', e)
         return self
 
     @allure.step('Нажимаем кнопку войти')
@@ -74,9 +75,10 @@ class Elements(object):
         self.step_with_title3(self.get_locator(self.submit_buttons))
         try:
             self.submit_buttons.click()
-        except IOError as e:
             self.screenshot()
-            print(e)
+        except IOError as e:
+
+            print('Что то пошло не так, мы уже работаем над этим', e)
         return self
 
     @allure.step('Проверка заголовка')
@@ -87,9 +89,9 @@ class Elements(object):
         self.step_with_title4(title_text)
         try:
             browser.should(have.title_containing(title_text))
-        except IOError as e:
             self.screenshot()
-            print(e)
+        except IOError as e:
+            print('Что то пошло не так, мы уже работаем над этим', e)
         return self
 
     @allure.step('Ввод смс-ки')
@@ -102,9 +104,10 @@ class Elements(object):
             sms_num = list(user.sms)
             for i in range(len(sms_num)):
                 self.input_sms_only[i].set_value(sms_num[i])
-        except IOError as e:
             self.screenshot()
-            print(e)
+        except IOError as e:
+
+            print('Что то пошло не так, мы уже работаем над этим', e)
         return self
 
     @allure.step('Проверяем наличие ошибки')
@@ -115,9 +118,9 @@ class Elements(object):
         self.step_with_title6(self.get_locator(self.error), text_error)
         try:
             self.error.should(have.text(text_error), timeout=3), f"Не удалось зарегистрироваться {text_error}"
-        except IOError as e:
             self.screenshot()
-            print(e)
+        except IOError as e:
+            print('Что то пошло не так, мы уже работаем над этим', e)
 
     # разлогинивание
 
@@ -149,8 +152,12 @@ class Elements(object):
         locator = str(selene_element)[17:-3]
         return locator
 
+    # сделать скрин
     def screenshot(self):
-        #browser.take_screenshot(self, path='../src/screenshots')
-        allure.attach.file('./src/screenshots.png', attachment_type=allure.attachment_type.PNG)
+        # browser.last_screenshot()
+        # browser.save_screenshot()
+        #allure.attach(browser.last_screenshot(), name="Screenshot", attachment_type=AttachmentType.PNG)
+        allure.attach.file(browser.save_screenshot(), name="Screenshot", attachment_type=AttachmentType.PNG)
+       # allure.attach(browser.take_screenshot(), name='sceenshott', attachment_type=allure.attachment_type.PNG)
 
 
