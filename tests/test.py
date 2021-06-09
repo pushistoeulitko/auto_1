@@ -12,6 +12,7 @@ wrong3 = User("testuser24", "1234", "2222")
 class TestAuth(object):
     pass
 
+
     @allure.suite('Регресс')
     @allure.epic('Регресс --> авторизации')
     @allure.feature('Вход в ДБО')
@@ -49,7 +50,8 @@ class TestAuth(object):
     @allure.severity('trivial')
     def test_log3(self):
         Elements().open().input_login(wrong3).input_password(wrong3).press_button().insert_sms(wrong3)
-        Elements().check_error('Введен неправильный одноразовый код')
+        Elements().check_error('Введен неправильный одноразовый код') #Превышено количество попыток входа. Доступ в интернет-банк заблокирован
+        Elements().logout_manual3()
 
 
     @allure.suite('Регресс')

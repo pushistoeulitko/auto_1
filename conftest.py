@@ -23,5 +23,9 @@ def teardown_module():
     browser.quit()
 
 
-
+@pytest.hookimpl()
+def pytest_exception_interact(node, call, report):
+    print("оу")
+    if report.failed:
+        print("hello")
 
