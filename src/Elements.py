@@ -161,15 +161,18 @@ class Elements(object):
 
     # разлогинивание
 
+    @allure.step('Разлогинивание1')
     def logout_manual(self):
         self.profile.click()
         self.change_user.click()
 
+    @allure.step('Разлогинивание2')
     def logout_manual2(self):
         self.customers_button.click()
         self.quit.click()
         self.change_user.click()
 
+    @allure.step('Разлогинивание3')
     def logout_manual3(self):
         self.cancel.click()
 

@@ -12,7 +12,7 @@ wrong3 = User("testuser24", "1234", "2222")
 class TestAuth(object):
     pass
 
-
+    @pytest.mark.test_positive
     @allure.suite('Регресс')
     @allure.epic('Регресс --> авторизации')
     @allure.feature('Вход в ДБО')
@@ -28,6 +28,7 @@ class TestAuth(object):
         #Elements().clear_cookie()
 
 
+    @pytest.mark.test_negative
     @allure.suite('Регресс')
     @allure.epic('Регресс --> авторизации')
     @allure.feature('Вход в ДБО')
@@ -40,6 +41,7 @@ class TestAuth(object):
         Elements().open().input_login(user).input_password(user).press_button().check_error('Указан неверный логин или пароль')
 
 
+    @pytest.mark.test_negative
     @allure.suite('Регресс')
     @allure.epic('Регресс --> авторизации')
     @allure.feature('Вход в ДБО')
@@ -54,6 +56,7 @@ class TestAuth(object):
         Elements().logout_manual3()
 
 
+    @pytest.mark.broken
     @allure.suite('Регресс')
     @allure.epic('Регресс --> авторизации')
     @allure.feature('Вход в ДБО')
@@ -63,5 +66,7 @@ class TestAuth(object):
     @allure.description('Тестируем вход Сломаный тест')
     @allure.issue('http://testlink.org', name='здесь мог бы быть номер тест-кейса')
     def test_log4(self):
+        print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
         Elements().open().input_login(right).input_password(right).press_button().check_tite()
+
 
