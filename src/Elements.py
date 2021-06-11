@@ -1,82 +1,33 @@
-import time
-import pytest
-import requests
 import allure
 from allure_commons.types import AttachmentType
-from selene import by, be, have, Browser, Config
+from selene import by, have
 from selene.config import base_url
-from selene.core.query import screenshot
 from selene.support.shared.jquery_style import s, ss
-from selene.support.shared import browser, config
-
-
-class Decorator:
-    def __init__(self, func):
-        print('> Класс Decorator метод __init__')
-        self.func = func
-
-    def __call__(self, *args):
-        print('> до вызова из класса...', self.func.__name__)
-        self.func(*args)
-        print('> после вызова из класса')
-
-
-@Decorator
-def wrapped(self, *args):
-    try:
-        self.func(*args)
-    except AssertionError as e:
-        allure.attach.file(browser.save_screenshot(), name="Screenshot", attachment_type=AttachmentType.PNG)
-        raise print(e)
-    return wrapped
-
+from selene.support.shared import browser
 
 
 class Elements(object):
 
     def __init__(self):
         self.login = s('input.with-icon.text')
-        # self.login = s('input.wi')
         self.password = s('input[type=password]')
-        #self.password = s('input[t')
         self.submit_buttons = s('ui-button.button-login')
         self.input_sms = s('div.sms-input-container')
         self.input_sms_only = ss('input[type = "number"]')
         self.error = s('div.errors')
         self.profile = s(by.xpath("//div[@id = 'logout-button']"))
         self.change_user = s(by.xpath("//a[contains(text(), 'Сменить пользователя')]"))
-        # self.customers_button =s('#customers-button')
         self.customers_button = s('div.user-icon')
         self.quit = s(by.xpath("//span[contains(text(), 'Выйти')]"))
         self.cancel = s('a.button-back')
 
-    # сделать скрин
-    def screenshot(self):
-        # browser.last_screenshot()
-        # allure.attach(browser.last_screenshot(), name="Screenshot", attachment_type=AttachmentType.PNG)
-        allure.attach.file(browser.save_screenshot(), name="Screenshot", attachment_type=AttachmentType.PNG)
-
-    def decorator_screenshot(self, func):
-        def wrapper(*args):
-            try:
-                func(*args)
-            except AssertionError as e:
-                allure.attach.file(browser.save_screenshot(), name="Screenshot", attachment_type=AttachmentType.PNG)
-                raise print(e)
-        return wrapper
-
-
-
-
     @allure.step(f'Открываем сайт')
-    # def step_with_title0(self, url):
-    #     pass
-
-    #@Decorator
-    #@decorator_screenshot
     def open(self):
-        # self.step_with_title0(self, str(base_url))
-        browser.open(base_url)
+        try:
+            browser.open(base_url)
+        except Exception as e:
+            self.screenshot()
+            assert False, print('Ошибка открытия страницы', e)
         return self
 
     @allure.step(f'Вводим логин')
@@ -89,7 +40,7 @@ class Elements(object):
             self.login.set_value(user.name)
         except Exception as e:
             self.screenshot()
-            assert False, print('Что то пошло не так, мы уже работаем над этим', e)
+            assert False, print('Ошибка ввода логина', e)
         return self
 
     @allure.step('Вводим пароль')
@@ -102,7 +53,7 @@ class Elements(object):
             self.password.set_value(user.passw)
         except Exception as e:
             self.screenshot()
-            assert False, print('Что то пошло не так, мы уже работаем над этим', e)
+            assert False, print('Ошибка ввода пароля', e)
         return self
 
     @allure.step('Нажимаем кнопку войти')
@@ -115,7 +66,7 @@ class Elements(object):
             self.submit_buttons.click()
         except Exception as e:
             self.screenshot()
-            assert False, print('Что то пошло не так, мы уже работаем над этим', e)
+            assert False, print('Не удалось нажать кнопку', e)
         return self
 
     @allure.step('Проверка заголовка')
@@ -128,7 +79,7 @@ class Elements(object):
             browser.should(have.title_containing(title_text))
         except Exception as e:
             self.screenshot()
-            assert False, print('Что то пошло не так, мы уже работаем над этим', e)
+            assert False, print('Не смогли получить заголовок', e)
         return self
 
     @allure.step('Ввод смс-ки')
@@ -143,7 +94,7 @@ class Elements(object):
                 self.input_sms_only[i].set_value(sms_num[i])
         except Exception as e:
             self.screenshot()
-            assert False, print('Что то пошло не так, мы уже работаем над этим', e)
+            assert False, print('Не удалось ввести смс', e)
         return self
 
     @allure.step('Проверяем наличие ошибки')
@@ -157,40 +108,25 @@ class Elements(object):
         except Exception as e:
             self.screenshot()
             print(e)
-            assert False, print('Что то пошло не так, мы уже работаем над этим')
+            assert False, print('Не смогли получить ошибку')
 
     # разлогинивание
 
     @allure.step('Разлогинивание1')
-    def logout_manual(self):
-        self.profile.click()
-        self.change_user.click()
-
-    @allure.step('Разлогинивание2')
-    def logout_manual2(self):
+    def logout_manual1(self):
         self.customers_button.click()
         self.quit.click()
         self.change_user.click()
 
-    @allure.step('Разлогинивание3')
-    def logout_manual3(self):
+    @allure.step('Разлогинивание2')
+    def logout_manual2(self):
         self.cancel.click()
-
-    def logout(self):
-        response = requests.get('https://delo-prod.skblab.ru/json/logout')
-        print(response.status_code)
-        # assert response.content == '{"success":true}'
-        # assert response.status_code == '<Response [200]>'
-        time.sleep(6)
-        return self
-
-    def clear_cookie(self):
-        browser.driver().delete_all_cookies()
-
-    # def at_page_main(self):
-    #     return MainPage
 
     #  преобразование элемента
     def get_locator(self, selene_element):
-        locator = str(selene_element)[17:-3]
+        locator = str(selene_element)
         return locator
+
+    # получаем скриншот
+    def screenshot(self):
+        allure.attach.file(browser.save_screenshot(), name="Screenshot", attachment_type=AttachmentType.PNG)
