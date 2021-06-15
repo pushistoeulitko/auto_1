@@ -1,9 +1,21 @@
 import allure
 from allure_commons.types import AttachmentType
 from selene import by, have
-from selene.config import base_url
 from selene.support.shared.jquery_style import s, ss
 from selene.support.shared import browser
+
+base_url = "https://delo-prod.skblab.ru/login"
+
+
+#  преобразование элемента
+def get_locator(selene_element):
+    locator = str(selene_element)
+    return locator
+
+
+# получаем скриншот
+def screenshot():
+    allure.attach.file(browser.save_screenshot(), name="Screenshot", attachment_type=AttachmentType.PNG)
 
 
 class Elements(object):
@@ -26,7 +38,7 @@ class Elements(object):
         try:
             browser.open(base_url)
         except Exception as e:
-            self.screenshot()
+            screenshot()
             assert False, print('Ошибка открытия страницы', e)
         return self
 
@@ -36,10 +48,10 @@ class Elements(object):
 
     def input_login(self, user):
         try:
-            self.step_with_title1(user.name, self.get_locator(self.login))
+            self.step_with_title1(user.name, get_locator(self.login))
             self.login.set_value(user.name)
         except Exception as e:
-            self.screenshot()
+            screenshot()
             assert False, print('Ошибка ввода логина', e)
         return self
 
@@ -48,11 +60,11 @@ class Elements(object):
         pass
 
     def input_password(self, user):
-        self.step_with_title2(self.get_locator(self.password), user.passw)
+        self.step_with_title2(get_locator(self.password), user.passw)
         try:
             self.password.set_value(user.passw)
         except Exception as e:
-            self.screenshot()
+            screenshot()
             assert False, print('Ошибка ввода пароля', e)
         return self
 
@@ -61,11 +73,11 @@ class Elements(object):
         pass
 
     def press_button(self):
-        self.step_with_title3(self.get_locator(self.submit_buttons))
+        self.step_with_title3(get_locator(self.submit_buttons))
         try:
             self.submit_buttons.click()
         except Exception as e:
-            self.screenshot()
+            screenshot()
             assert False, print('Не удалось нажать кнопку', e)
         return self
 
@@ -78,7 +90,7 @@ class Elements(object):
         try:
             browser.should(have.title_containing(title_text))
         except Exception as e:
-            self.screenshot()
+            screenshot()
             assert False, print('Не смогли получить заголовок', e)
         return self
 
@@ -87,13 +99,13 @@ class Elements(object):
         pass
 
     def insert_sms(self, user):
-        self.step_with_title5(self.get_locator(self.input_sms_only[0]), user.sms)
+        self.step_with_title5(get_locator(self.input_sms_only[0]), user.sms)
         try:
             sms_num = list(user.sms)
             for i in range(len(sms_num)):
                 self.input_sms_only[i].set_value(sms_num[i])
         except Exception as e:
-            self.screenshot()
+            screenshot()
             assert False, print('Не удалось ввести смс', e)
         return self
 
@@ -102,11 +114,11 @@ class Elements(object):
         pass
 
     def check_error(self, text_error):
-        self.step_with_title6(self.get_locator(self.error), text_error)
+        self.step_with_title6(get_locator(self.error), text_error)
         try:
             self.error.should(have.text(text_error), timeout=3), f"Не удалось зарегистрироваться {text_error}"
         except Exception as e:
-            self.screenshot()
+            screenshot()
             print(e)
             assert False, print('Не смогли получить ошибку')
 
@@ -122,11 +134,4 @@ class Elements(object):
     def logout_manual2(self):
         self.cancel.click()
 
-    #  преобразование элемента
-    def get_locator(self, selene_element):
-        locator = str(selene_element)
-        return locator
 
-    # получаем скриншот
-    def screenshot(self):
-        allure.attach.file(browser.save_screenshot(), name="Screenshot", attachment_type=AttachmentType.PNG)
