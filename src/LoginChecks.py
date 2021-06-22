@@ -27,6 +27,11 @@ class LoginChecks:
         LoginSteps().input_password(user.passw)
         return self
 
+    @allure.step(f'Авторизируемся')
+    def auth_login_and_password(self, user):
+        self.check_input_login(user).check_input_password(user)
+        return self
+
     @allure.step('Нажимаем кнопку войти')
     def check_press_button(self):
         LoginSteps().press_button()

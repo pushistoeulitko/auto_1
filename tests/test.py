@@ -17,7 +17,7 @@ class TestAuth:
     @allure.description('Тестируем вход с верным логином и смс')
     def test_log_right_authorization(self):
         LoginChecks().open_login_page()\
-            .check_input_login(right).check_input_password(right).check_press_button()\
+            .auth_login_and_password(right).check_press_button()\
             .check_title('Делобанк - Подтверждение входа').check_insert_sms(right)\
             .check_title('Делобанк')
         LoginChecks().check_logout_manual_quit()
@@ -31,7 +31,7 @@ class TestAuth:
     @allure.issue('http://testlink.org', name='здесь мог бы быть номер тест-кейса')
     def test_log_wrong_login_or_password(self, user):
         LoginChecks().open_login_page()\
-            .check_input_login(user).check_input_password(user).check_press_button()\
+            .auth_login_and_password(user).check_press_button()\
             .check_error('Указан неверный логин или пароль')
 
     @pytest.mark.test_negative
@@ -42,7 +42,7 @@ class TestAuth:
     @allure.severity('trivial')
     def test_log_wrong_sms(self):
         LoginChecks().open_login_page()\
-            .check_input_login(wrong_sms).check_input_password(wrong_sms).check_press_button().check_insert_sms(wrong_sms)
+            .auth_login_and_password(wrong_sms).check_press_button().check_insert_sms(wrong_sms)
         LoginChecks().check_error('Введен неправильный одноразовый код')
         LoginChecks().logout_manual_change_user()
 
@@ -54,6 +54,6 @@ class TestAuth:
     @allure.issue('http://testlink.org', name='здесь мог бы быть номер тест-кейса')
     def test_log_broken(self):
         LoginChecks().open_login_page() \
-            .check_input_login(right).check_input_password(right).check_press_button() \
+            .auth_login_and_password(right).check_press_button() \
             .check_tile('Делобанк - Подтверждение входа')
 
