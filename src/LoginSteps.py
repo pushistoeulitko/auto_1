@@ -3,6 +3,7 @@ from allure_commons.types import AttachmentType
 from selene import have
 from selene.support.shared import browser
 from src.LoginPage import LoginPage
+from src.Text import Text
 from src.User import *
 
 base_url = "https://delo-prod.skblab.ru/login"
@@ -20,11 +21,11 @@ class LoginSteps:
         return self
 
     def title_page_login_password(self):
-        self.check_title('Делобанк - Вход')
+        self.check_title(Text.DBO_enter)
         return self
 
     def title_page_login_confirm_sms(self):
-        self.check_title('Делобанк - Подтверждение входа')
+        self.check_title(Text.DBO_enter_confirn)
         return self
 
     @allure.step(f'Вводим логин')

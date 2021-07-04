@@ -1,9 +1,14 @@
 import allure
 from src.LoginChecks import LoginChecks
-from src.LoginSteps import right
 import pytest
-from src.User import wrong_login, wrong_password, wrong_sms
 
+from src.Text import Text
+from src.User import User
+
+right = User("335026")
+wrong_login = User("ff")
+wrong_password = User("testuser25", "2222", "1234")
+wrong_sms = User("testuser24", "1234", "2222")
 
 @allure.suite('Регресс')
 @allure.epic('Регресс --> авторизации')
@@ -18,8 +23,8 @@ class TestAuth:
     def test_log_right_authorization(self):
         LoginChecks().open_login_page()\
             .auth_login_and_password(right).check_press_button()\
-            .check_title('Делобанк - Подтверждение входа').check_insert_sms(right)\
-            .check_title('Делобанк')
+            .check_title(Text.DBO_enter_confirn).check_insert_sms(right)\
+            .check_title(Text.Bank)
         LoginChecks().check_logout_manual_quit()
 
 
@@ -32,7 +37,7 @@ class TestAuth:
     def test_log_wrong_login_or_password(self, user):
         LoginChecks().open_login_page()\
             .auth_login_and_password(user).check_press_button()\
-            .check_error('Указан неверный логин или пароль')
+            .check_error(Text.Error_login_or_password)
 
     @pytest.mark.test_negative
     @allure.story('Ввод неверной смс')
@@ -43,7 +48,7 @@ class TestAuth:
     def test_log_wrong_sms(self):
         LoginChecks().open_login_page()\
             .auth_login_and_password(wrong_sms).check_press_button().check_insert_sms(wrong_sms)
-        LoginChecks().check_error('Введен неправильный одноразовый код')
+        LoginChecks().check_error(Text.Error_sms)
         LoginChecks().logout_manual_change_user()
 
     @pytest.mark.broken
@@ -55,5 +60,5 @@ class TestAuth:
     def test_log_broken(self):
         LoginChecks().open_login_page() \
             .auth_login_and_password(right).check_press_button() \
-            .check_tile('Делобанк - Подтверждение входа')
+            .check_tile(Text.DBO_enter_confirn)
 

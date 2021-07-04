@@ -4,4 +4,3 @@ pytest==6.2.4
 pytest-rerunfailures==10.0
 selene==2.0.0a38
 selenium==3.141.0
-webdriver-manager==3.4.2

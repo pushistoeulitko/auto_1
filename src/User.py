@@ -1,5 +1,5 @@
 class User:
-    def __init__(self, name, passw, sms):
+    def __init__(self, name, passw="1234", sms="1234"):
         self.name = name
         self.passw = passw
         self.sms = sms
@@ -7,8 +7,3 @@ class User:
     def __repr__(self):
         return f"{self.name}, {self.passw}, {self.sms}"
 
-
-right = User("335026", "1234", "1234")
-wrong_login = User("ff", "1234", "1234")
-wrong_password = User("testuser25", "2222", "1234")
-wrong_sms = User("testuser24", "1234", "2222")
