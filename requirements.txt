@@ -1,5 +1,4 @@
 allure-pytest==2.9.41
-allure-python-commons==2.9.41
 pytest==6.2.4
 pytest-rerunfailures==10.0
 selene==2.0.0a38
